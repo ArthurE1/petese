@@ -1,7 +1,7 @@
 # PETESE — Evaluación de software educativo
 
-Formulario web para evaluar software educativo con escala **1 a 5** y opción **“No aplica (N/A)”** por indicador.  
-Incluye captura de datos del software, calificación por secciones, exportación de resultados a **JSON** y generación de **reporte en PDF** (mediante impresión del navegador).
+Formulario web basado en el instrumento PETESE para evaluar software educativo con escala 1 a 5 y opción “No aplica (N/A)” por indicador.
+Incluye captura de datos del software, calificación por secciones, exportación de resultados a JSON y generación de reporte en PDF (mediante impresión del navegador).
 
 ## Demo (GitHub Pages)
 - https://arthure1.github.io/PETESE/
