@@ -4,7 +4,7 @@ Formulario web para evaluar software educativo con escala **1 a 5** y opción **
 Incluye captura de datos del software, calificación por secciones, exportación de resultados a **JSON** y generación de **reporte en PDF** (mediante impresión del navegador).
 
 ## Demo (GitHub Pages)
-- https://arthure1.github.io/petese/
+- https://arthure1.github.io/PETESE/
 
 ## Funciones principales
 - Escala de evaluación **1–5** por pregunta
