@@ -1,0 +1,1418 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>PETESE — Evaluación de software </title>
+  <style>
+    :root {
+      --gap: 14px;
+      --radius: 14px;
+      --shadow: 0 6px 20px rgba(0, 0, 0, .08);
+      --accent: #1d4ed8;
+      /* azul UNI*/
+      --accent-2: #0b5cff;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, Ubuntu, Cantarell, "Noto Sans", Arial, "Apple Color Emoji", "Segoe UI Emoji";
+      margin: 0;
+      position: relative;
+      /* Fondo */
+      background:
+        radial-gradient(900px 520px at 12% 0%, rgba(29, 78, 216, .22) 0%, transparent 60%),
+        radial-gradient(900px 540px at 88% 8%, rgba(11, 92, 255, .14) 0%, transparent 65%),
+        radial-gradient(1200px 800px at 50% 120%, rgba(255, 255, 255, .07) 0%, transparent 55%),
+        linear-gradient(180deg, rgba(255, 255, 255, .04) 0%, rgba(255, 255, 255, 0) 40%, rgba(0, 0, 0, .35) 100%),
+        #0b0b0c;
+      color: #f2f2f3;
+    }
+
+    /* Texturaa */
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.35'/%3E%3C/svg%3E");
+      opacity: .06;
+      mix-blend-mode: overlay;
+      z-index: 0;
+    }
+
+    header,
+    .wrap,
+    .actions {
+      position: relative;
+      z-index: 1;
+    }
+
+    header {
+      padding: 28px 20px 8px;
+      background:
+        radial-gradient(1200px 420px at 12% -40%, rgba(43, 46, 68, 1) 0%, transparent 62%),
+        radial-gradient(900px 260px at 70% -60%, rgba(29, 78, 216, .35) 0%, transparent 70%);
+    }
+
+    .wrap {
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 0 16px;
+    }
+
+    h1 {
+      margin: 0 0 6px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+    }
+
+    /* DEgrad*/
+    .brand {
+      display: inline-block;
+      padding: 2px 10px 3px;
+      margin-right: 4px;
+      border-radius: 10px;
+      background: linear-gradient(90deg, var(--accent-2) 0%, var(--accent) 70%);
+      box-shadow: 0 10px 30px rgba(29, 78, 216, .22);
+      border: 1px solid rgba(255, 255, 255, .10);
+    }
+
+    .title-dash {
+      margin: 0 10px 0 8px;
+      color: #dbe6ff;
+    }
+
+    p.lead {
+      margin: 0 0 14px;
+      color: #c8c9d1;
+    }
+
+    .card {
+      background: #15151a;
+      border: 1px solid #2a2a34;
+      border-radius: var(--radius);
+      padding: 16px;
+      margin: 16px 0;
+      box-shadow: var(--shadow);
+    }
+
+    .section-title {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin: 0 0 8px;
+    }
+
+    .pill {
+      font-size: 12px;
+      background: #272734;
+      color: #d6d7df;
+      padding: 3px 10px;
+      border-radius: 999px;
+      border: 1px solid #3a3a4a;
+    }
+
+    .meta {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--gap);
+    }
+
+    .q {
+      display: grid;
+      grid-template-columns: 1fr minmax(220px, 320px) auto auto;
+      gap: 10px;
+      align-items: center;
+      padding: 10px 0;
+      border-top: 1px dashed #2a2a34;
+    }
+
+    .q:first-of-type {
+      border-top: 0;
+    }
+
+    .q label {
+      line-height: 1.3;
+    }
+
+    input[type="range"] {
+      accent-color: var(--accent);
+    }
+
+    textarea,
+    input[type="text"] {
+      width: 100%;
+      background: #101015;
+      border: 1px solid #2a2a34;
+      color: #e9eaf2;
+      border-radius: 10px;
+      padding: 10px 12px;
+    }
+
+    textarea {
+      min-height: 60px;
+      resize: vertical;
+      margin-top: 6px;
+    }
+
+    .actions {
+      position: sticky;
+      bottom: 0;
+      background: linear-gradient(180deg, rgba(11, 11, 12, 0) 0%, #0b0b0c 26%);
+      padding: 20px 0 26px;
+      border-top: 1px solid #222230;
+    }
+
+    button {
+      appearance: none;
+      border: 0;
+      border-radius: 12px;
+      padding: 6px 10px;
+      font-weight: 700;
+      cursor: pointer;
+      font-size: 12px;
+    }
+
+    .primary {
+      background: #6da8ff;
+      color: #0a0a0f;
+      padding: 12px 16px;
+      font-size: 14px;
+    }
+
+    .ghost {
+      background: transparent;
+      color: #d7d7e0;
+      border: 1px solid #343446;
+      padding: 12px 16px;
+      font-size: 14px;
+    }
+
+    small.hint {
+      color: #a6a7b3;
+      display: block;
+      margin-top: 8px;
+    }
+
+    .tagline {
+      color: #a7a9b7;
+      font-size: 12px;
+    }
+
+    /* score visible --- NA --- */
+    .rating {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 220px;
+    }
+
+    .rating input[type="range"] {
+      width: 220px;
+    }
+
+    .rating .tick {
+      font-size: 12px;
+      opacity: .75;
+      width: 14px;
+      text-align: center;
+      user-select: none;
+    }
+
+    .rating .score {
+      font-variant-numeric: tabular-nums;
+      background: #101015;
+      border: 1px solid #2a2a34;
+      color: #e9eaf2;
+      border-radius: 10px;
+      padding: 6px 10px;
+      min-width: 52px;
+      text-align: center;
+      user-select: none;
+    }
+
+    .na-toggle {
+      background: #101015;
+      border: 1px solid #2a2a34;
+      color: #e9eaf2;
+      border-radius: 10px;
+      padding: 8px 10px;
+      cursor: pointer;
+      font-weight: 600;
+    }
+
+    .na-toggle.active {
+      background: #232334;
+    }
+
+    .q.na {
+      opacity: .78;
+    }
+
+    .q textarea {
+      grid-column: 1 / -1;
+    }
+
+    @media (max-width: 720px) {
+      .q {
+        grid-template-columns: 1fr;
+        align-items: stretch;
+      }
+
+      .rating {
+        min-width: 0;
+        width: 100%;
+      }
+
+      .rating input[type="range"] {
+        width: 100%;
+      }
+
+      .q button {
+        width: 100%;
+      }
+    }
+
+    /* ------ */
+    .summary-meta {
+      margin: 10px 0 12px;
+      padding: 12px;
+      border-radius: 14px;
+      border: 1px solid rgba(255, 255, 255, .10);
+      background:
+        radial-gradient(700px 180px at 0% 0%, rgba(29, 78, 216, .22) 0%, transparent 60%),
+        radial-gradient(700px 180px at 100% 0%, rgba(11, 92, 255, .14) 0%, transparent 65%),
+        linear-gradient(180deg, rgba(255, 255, 255, .04) 0%, rgba(0, 0, 0, .10) 100%);
+    }
+
+    .summary-meta .row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .summary-meta .chip {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      padding: 8px 10px;
+      border-radius: 999px;
+      background: rgba(16, 16, 21, .55);
+      border: 1px solid #2a2a34;
+      backdrop-filter: blur(6px);
+    }
+
+    .summary-meta .k {
+      font-size: 12px;
+      color: #aeb2c3;
+    }
+
+    .summary-meta .v {
+      font-size: 12px;
+      color: #eef0ff;
+      font-weight: 800;
+    }
+
+    .summary-meta .v.muted {
+      color: #9aa0b4;
+      font-weight: 700;
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <div class="wrap">
+      <h1><span class="brand">PETESE</span><span class="title-dash">—</span> Evaluación de software educativo</h1>
+      <p class="lead">Cuestionario basado en los ejes de <strong>carácter pedagógico</strong>,
+        <strong>contenido</strong>, <strong>interfaz</strong>, <strong>usabilidad</strong> y <strong>aspectos
+          técnicos</strong>.
+      </p>
+      <div class="tagline">Escala: 1 = No cumple, 3 = Parcial, 5 = Cumple plenamente.</div>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <form id="form-petese">
+
+      <!-- Datos del software -->
+      <div class="card">
+        <div class="section-title">
+          <span class="pill">Datos del software</span>
+          <h2 style="margin:0;">Información general</h2>
+        </div>
+        <div class="meta">
+          <label>Nombre del software<input type="text" name="meta.nombre" /></label>
+          <label>Versión<input type="text" name="meta.version" /></label>
+          <label>Evaluador(a)<input type="text" name="meta.evaluador" /></label>
+        </div>
+        <small class="hint">Consejo: registra también el contexto (curso, nivel de grado, dispositivos,
+          conectividad).</small>
+      </div>
+
+      <!-- 1. Aspectos generales parte   1 -->
+      <div class="card">
+        <div class="section-title"><span class="pill">1</span>
+          <h2 style="margin:0;">Aspectos generales</h2>
+        </div>
+        <fieldset>
+          <div class="q" id="q-general.innovacion"><label>El software es innovador y tiene un valor
+              agregado.</label><input type="range" name="general.innovacion" min="1" max="5" value="3"><button
+              type="button" class="add-comment" data-target="general.innovacion">+ Comentario</button></div>
+          <div class="q" id="q-general.facilidad_uso"><label>El software es fácil de usar.</label><input type="range"
+              name="general.facilidad_uso" min="1" max="5" value="3"><button type="button" class="add-comment"
+              data-target="general.facilidad_uso">+ Comentario</button></div>
+          <div class="q" id="q-general.perspectiva_interdisciplinaria"><label>El software tiene una perspectiva
+              interdisciplinaria.</label><input type="range" name="general.perspectiva_interdisciplinaria" min="1"
+              max="5" value="3"><button type="button" class="add-comment"
+              data-target="general.perspectiva_interdisciplinaria">+ Comentario</button></div>
+          <div class="q" id="q-general.niveles_complejidad"><label>El software contiene diferentes niveles de
+              complejidad.</label><input type="range" name="general.niveles_complejidad" min="1" max="5"
+              value="3"><button type="button" class="add-comment" data-target="general.niveles_complejidad">+
+              Comentario</button></div>
+          <div class="q" id="q-general.enfoque_curricular"><label>Hay un enfoque de aprendizaje que se ajusta al
+              currículo del público objetivo.</label><input type="range" name="general.enfoque_curricular" min="1"
+              max="5" value="3"><button type="button" class="add-comment" data-target="general.enfoque_curricular">+
+              Comentario</button></div>
+        </fieldset>
+      </div>
+
+      <!-- 2. Aspectos pedagogicos     parte 2 -->
+      <div class="card">
+        <div class="section-title"><span class="pill">2</span>
+          <h2 style="margin:0;">Aspectos pedagógicos</h2>
+        </div>
+        <fieldset>
+          <legend>2.1 Objetivos educativos</legend>
+          <div class="q" id="q-pedagogia.objetivos_claros"><label>Existen objetivos educativos claramente definidos y
+              comunicados.</label><input type="range" name="pedagogia.objetivos_claros" min="1" max="5"
+              value="3"><button type="button" class="add-comment" data-target="pedagogia.objetivos_claros">+
+              Comentario</button></div>
+          <div class="q" id="q-pedagogia.contexto_individual_colaboracion"><label>La construcción tiene lugar en un
+              contexto individual pero integra elementos de cooperación y colaboración.</label><input type="range"
+              name="pedagogia.contexto_individual_colaboracion" min="1" max="5" value="3"><button type="button"
+              class="add-comment" data-target="pedagogia.contexto_individual_colaboracion">+ Comentario</button></div>
+          <div class="q" id="q-pedagogia.promueve_creatividad"><label>Promueve la creatividad.</label><input
+              type="range" name="pedagogia.promueve_creatividad" min="1" max="5" value="3"><button type="button"
+              class="add-comment" data-target="pedagogia.promueve_creatividad">+ Comentario</button></div>
+          <div class="q" id="q-pedagogia.exploracion_independiente"><label>La exploración es la estrategia favorecida y
+              anima a los estudiantes a buscar conocimiento de forma independiente.</label><input type="range"
+              name="pedagogia.exploracion_independiente" min="1" max="5" value="3"><button type="button"
+              class="add-comment" data-target="pedagogia.exploracion_independiente">+ Comentario</button></div>
+          <div class="q" id="q-pedagogia.autorreflexion_autocontrol"><label>El software fomenta el autoanálisis, la
+              autorregulación, la autorreflexión y la autoconciencia.</label><input type="range"
+              name="pedagogia.autorreflexion_autocontrol" min="1" max="5" value="3"><button type="button"
+              class="add-comment" data-target="pedagogia.autorreflexion_autocontrol">+ Comentario</button></div>
+        </fieldset>
+        <fieldset>
+          <legend>2.2 Actividades y tareas</legend>
+          <div class="q" id="q-pedagogia.actividades_aspectos_necesarios"><label>Las actividades trabajan los aspectos
+              necesarios para alcanzar los objetivos matemáticos propuestos.</label><input type="range"
+              name="pedagogia.actividades_aspectos_necesarios" min="1" max="5" value="3"><button type="button"
+              class="add-comment" data-target="pedagogia.actividades_aspectos_necesarios">+ Comentario</button></div>
+          <div class="q" id="q-pedagogia.tareas_relevantes_autenticas"><label>Las tareas son relevantes, auténticas y
+              representan las complejidades naturales del mundo real.</label><input type="range"
+              name="pedagogia.tareas_relevantes_autenticas" min="1" max="5" value="3"><button type="button"
+              class="add-comment" data-target="pedagogia.tareas_relevantes_autenticas">+ Comentario</button></div>
+          <div class="q" id="q-pedagogia.dificultad_andamiaje_apropiado"><label>El nivel de dificultad es apropiado y el
+              andamiaje ayuda a los estudiantes a desempeñarse justo más allá de su capacidad.</label><input
+              type="range" name="pedagogia.dificultad_andamiaje_apropiado" min="1" max="5" value="3"><button
+              type="button" class="add-comment" data-target="pedagogia.dificultad_andamiaje_apropiado">+
+              Comentario</button></div>
+          <div class="q" id="q-pedagogia.variabilidad_tareas"><label>Hay variabilidad en las tareas.</label><input
+              type="range" name="pedagogia.variabilidad_tareas" min="1" max="5" value="3"><button type="button"
+              class="add-comment" data-target="pedagogia.variabilidad_tareas">+ Comentario</button></div>
+          <div class="q" id="q-pedagogia.resultados_disponibles"><label>Los resultados de las actividades están
+              disponibles.</label><input type="range" name="pedagogia.resultados_disponibles" min="1" max="5"
+              value="3"><button type="button" class="add-comment" data-target="pedagogia.resultados_disponibles">+
+              Comentario</button></div>
+          <div class="q" id="q-pedagogia.actividades_creacion_personalizacion"><label>Las actividades se pueden crear
+              fácilmente y personalizar.</label><input type="range"
+              name="pedagogia.actividades_creacion_personalizacion" min="1" max="5" value="3"><button type="button"
+              class="add-comment" data-target="pedagogia.actividades_creacion_personalizacion">+ Comentario</button>
+          </div>
+          <div class="q" id="q-pedagogia.tareas_resolucion_problemas"><label>Las tareas son de resolución de problemas y
+              desarrollan habilidades de pensamiento de orden superior.</label><input type="range"
+              name="pedagogia.tareas_resolucion_problemas" min="1" max="5" value="3"><button type="button"
+              class="add-comment" data-target="pedagogia.tareas_resolucion_problemas">+ Comentario</button></div>
+        </fieldset>
+        <fieldset>
+          <legend>2.3 Rol del docente</legend>
+          <div class="q" id="q-pedagogia.uso_sin_instructor"><label>El software se puede usar sin la intervención de un
+              instructor.</label><input type="range" name="pedagogia.uso_sin_instructor" min="1" max="5"
+              value="3"><button type="button" class="add-comment" data-target="pedagogia.uso_sin_instructor">+
+              Comentario</button></div>
+          <div class="q" id="q-pedagogia.rol_docente_guia"><label>Los docentes sirven como guías, monitores, mentores,
+              tutores o facilitadores.</label><input type="range" name="pedagogia.rol_docente_guia" min="1" max="5"
+              value="3"><button type="button" class="add-comment" data-target="pedagogia.rol_docente_guia">+
+              Comentario</button></div>
+        </fieldset>
+        <fieldset>
+          <legend>2.4 Evaluación</legend>
+          <div class="q" id="q-pedagogia.evaluacion_apoyo_docente"><label>El software reconoce y apoya el importante rol
+              del docente.</label><input type="range" name="pedagogia.evaluacion_apoyo_docente" min="1" max="5"
+              value="3"><button type="button" class="add-comment" data-target="pedagogia.evaluacion_apoyo_docente">+
+              Comentario</button></div>
+          <div class="q" id="q-pedagogia.evaluacion_presente"><label>Hay presencia de evaluación.</label><input
+              type="range" name="pedagogia.evaluacion_presente" min="1" max="5" value="3"><button type="button"
+              class="add-comment" data-target="pedagogia.evaluacion_presente">+ Comentario</button></div>
+          <div class="q" id="q-pedagogia.evaluacion_autentica_integrada"><label>La evaluación es auténtica e integrada
+              con la enseñanza.</label><input type="range" name="pedagogia.evaluacion_autentica_integrada" min="1"
+              max="5" value="3"><button type="button" class="add-comment"
+              data-target="pedagogia.evaluacion_autentica_integrada">+ Comentario</button></div>
+        </fieldset>
+      </div>
+
+      <!-- 3. Aspectos de usabilidad         parte 3-->
+      <div class="card">
+        <div class="section-title"><span class="pill">3</span>
+          <h2 style="margin:0;">Aspectos de usabilidad</h2>
+        </div>
+        <fieldset>
+          <legend>3.1 Orientación e instrucciones</legend>
+          <div class="q" id="q-usabilidad.guia_anima_usuario"><label>El sistema guía y anima al usuario.</label><input
+              type="range" name="usabilidad.guia_anima_usuario" min="1" max="5" value="3"><button type="button"
+              class="add-comment" data-target="usabilidad.guia_anima_usuario">+ Comentario</button></div>
+          <div class="q" id="q-usabilidad.recursos_ayuda"><label>Hay recursos de ayuda.</label><input type="range"
+              name="usabilidad.recursos_ayuda" min="1" max="5" value="3"><button type="button" class="add-comment"
+              data-target="usabilidad.recursos_ayuda">+ Comentario</button></div>
+          <div class="q" id="q-usabilidad.instrucciones_claras"><label>Las instrucciones son claras y fácilmente
+              disponibles.</label><input type="range" name="usabilidad.instrucciones_claras" min="1" max="5"
+              value="3"><button type="button" class="add-comment" data-target="usabilidad.instrucciones_claras">+
+              Comentario</button></div>
+        </fieldset>
+        <fieldset>
+          <legend>3.2 Retroalimentación y motivación</legend>
+          <div class="q" id="q-usabilidad.retroalimentacion_efectiva"><label>La retroalimentación se usa de manera
+              efectiva.</label><input type="range" name="usabilidad.retroalimentacion_efectiva" min="1" max="5"
+              value="3"><button type="button" class="add-comment" data-target="usabilidad.retroalimentacion_efectiva">+
+              Comentario</button></div>
+          <div class="q" id="q-usabilidad.motivacion_intrinseca"><label>El software contiene motivación
+              intrínseca.</label><input type="range" name="usabilidad.motivacion_intrinseca" min="1" max="5"
+              value="3"><button type="button" class="add-comment" data-target="usabilidad.motivacion_intrinseca">+
+              Comentario</button></div>
+          <div class="q" id="q-usabilidad.fomenta_acciones_positivas"><label>El software anima a los usuarios en sus
+              acciones positivas.</label><input type="range" name="usabilidad.fomenta_acciones_positivas" min="1"
+              max="5" value="3"><button type="button" class="add-comment"
+              data-target="usabilidad.fomenta_acciones_positivas">+ Comentario</button></div>
+          <div class="q" id="q-usabilidad.retroalimentacion_positiva_en_fallos"><label>La retroalimentación es positiva
+              incluso si el usuario falla.</label><input type="range"
+              name="usabilidad.retroalimentacion_positiva_en_fallos" min="1" max="5" value="3"><button type="button"
+              class="add-comment" data-target="usabilidad.retroalimentacion_positiva_en_fallos">+ Comentario</button>
+          </div>
+          <div class="q" id="q-usabilidad.retroalimentacion_reflexion_errores"><label>La retroalimentación permite al
+              estudiante reflexionar sobre sus errores.</label><input type="range"
+              name="usabilidad.retroalimentacion_reflexion_errores" min="1" max="5" value="3"><button type="button"
+              class="add-comment" data-target="usabilidad.retroalimentacion_reflexion_errores">+ Comentario</button>
+          </div>
+          <div class="q" id="q-usabilidad.retroalimentacion_progreso"><label>El software ofrece retroalimentación del
+              progreso del estudiante.</label><input type="range" name="usabilidad.retroalimentacion_progreso" min="1"
+              max="5" value="3"><button type="button" class="add-comment"
+              data-target="usabilidad.retroalimentacion_progreso">+ Comentario</button></div>
+        </fieldset>
+        <fieldset>
+          <legend>3.3 Interacción (sistema y usuarios)</legend>
+          <div class="q" id="q-usabilidad.interaccion_sistema"><label>Existe capacidad de interacción con el
+              sistema.</label><input type="range" name="usabilidad.interaccion_sistema" min="1" max="5"
+              value="3"><button type="button" class="add-comment" data-target="usabilidad.interaccion_sistema">+
+              Comentario</button></div>
+          <div class="q" id="q-usabilidad.seccion_discusion_colaboracion"><label>El software tiene una sección donde se
+              pueden realizar discusiones y colaboración.</label><input type="range"
+              name="usabilidad.seccion_discusion_colaboracion" min="1" max="5" value="3"><button type="button"
+              class="add-comment" data-target="usabilidad.seccion_discusion_colaboracion">+ Comentario</button></div>
+        </fieldset>
+        <fieldset>
+          <legend>3.4 Prevención de errores</legend>
+          <div class="q" id="q-usabilidad.reconoce_recupera_errores"><label>El software reconoce los errores y recupera
+              el proceso.</label><input type="range" name="usabilidad.reconoce_recupera_errores" min="1" max="5"
+              value="3"><button type="button" class="add-comment" data-target="usabilidad.reconoce_recupera_errores">+
+              Comentario</button></div>
+          <div class="q" id="q-usabilidad.prevencion_errores"><label>Previene que el usuario cometa
+              errores.</label><input type="range" name="usabilidad.prevencion_errores" min="1" max="5" value="3"><button
+              type="button" class="add-comment" data-target="usabilidad.prevencion_errores">+ Comentario</button></div>
+          <div class="q" id="q-usabilidad.mensajes_error_claros"><label>Los mensajes de error son claros.</label><input
+              type="range" name="usabilidad.mensajes_error_claros" min="1" max="5" value="3"><button type="button"
+              class="add-comment" data-target="usabilidad.mensajes_error_claros">+ Comentario</button></div>
+          <div class="q" id="q-usabilidad.aprendizaje_errores"><label>El usuario aprende de los errores.</label><input
+              type="range" name="usabilidad.aprendizaje_errores" min="1" max="5" value="3"><button type="button"
+              class="add-comment" data-target="usabilidad.aprendizaje_errores">+ Comentario</button></div>
+        </fieldset>
+        <fieldset>
+          <legend>3.5 Control y personalización</legend>
+          <div class="q" id="q-usabilidad.control_usuario"><label>El alumno tiene control sobre el sistema y sus
+              acciones.</label><input type="range" name="usabilidad.control_usuario" min="1" max="5" value="3"><button
+              type="button" class="add-comment" data-target="usabilidad.control_usuario">+ Comentario</button></div>
+          <div class="q" id="q-usabilidad.personalizacion_configuracion"><label>Es posible la personalización de la
+              configuración o la información.</label><input type="range" name="usabilidad.personalizacion_configuracion"
+              min="1" max="5" value="3"><button type="button" class="add-comment"
+              data-target="usabilidad.personalizacion_configuracion">+ Comentario</button></div>
+        </fieldset>
+      </div>
+
+      <!-- 4. Aspectos teecnicos         parte 4 -->
+      <div class="card">
+        <div class="section-title"><span class="pill">4</span>
+          <h2 style="margin:0;">Aspectos técnicos</h2>
+        </div>
+        <fieldset>
+          <legend>4.1 Compatibilidad</legend>
+          <div class="q" id="q-tecnico.compatibilidad_hardware"><label>El software necesita ser compatible con el
+              hardware de los usuarios.</label><input type="range" name="tecnico.compatibilidad_hardware" min="1"
+              max="5" value="3"><button type="button" class="add-comment"
+              data-target="tecnico.compatibilidad_hardware">+ Comentario</button></div>
+          <div class="q" id="q-tecnico.condiciones_compatibilidad"><label>Las condiciones de compatibilidad están
+              claramente explicadas.</label><input type="range" name="tecnico.condiciones_compatibilidad" min="1"
+              max="5" value="3"><button type="button" class="add-comment"
+              data-target="tecnico.condiciones_compatibilidad">+ Comentario</button></div>
+        </fieldset>
+        <fieldset>
+          <legend>4.2 Instalación</legend>
+          <div class="q" id="q-tecnico.instalacion_facil"><label>El software necesita ser fácil de
+              instalar.</label><input type="range" name="tecnico.instalacion_facil" min="1" max="5" value="3"><button
+              type="button" class="add-comment" data-target="tecnico.instalacion_facil">+ Comentario</button></div>
+          <div class="q" id="q-tecnico.modalidad_uso"><label>La modalidad de uso está explicada.</label><input
+              type="range" name="tecnico.modalidad_uso" min="1" max="5" value="3"><button type="button"
+              class="add-comment" data-target="tecnico.modalidad_uso">+ Comentario</button></div>
+        </fieldset>
+        <fieldset>
+          <legend>4.3 Gestión de datos</legend>
+          <div class="q" id="q-tecnico.manipulacion_datos_masiva"><label>El software es capaz de manipular los datos que
+              requiere incluso en gran cantidad.</label><input type="range" name="tecnico.manipulacion_datos_masiva"
+              min="1" max="5" value="3"><button type="button" class="add-comment"
+              data-target="tecnico.manipulacion_datos_masiva">+ Comentario</button></div>
+          <div class="q" id="q-tecnico.datos_analizables"><label>Los datos generados por el software pueden ser
+              analizados.</label><input type="range" name="tecnico.datos_analizables" min="1" max="5" value="3"><button
+              type="button" class="add-comment" data-target="tecnico.datos_analizables">+ Comentario</button></div>
+          <div class="q" id="q-tecnico.transparencia_informacion"><label>Hay transparencia de la información hacia el
+              usuario.</label><input type="range" name="tecnico.transparencia_informacion" min="1" max="5"
+              value="3"><button type="button" class="add-comment" data-target="tecnico.transparencia_informacion">+
+              Comentario</button></div>
+          <div class="q" id="q-tecnico.datos_guardados"><label>El software guarda los datos del usuario.</label><input
+              type="range" name="tecnico.datos_guardados" min="1" max="5" value="3"><button type="button"
+              class="add-comment" data-target="tecnico.datos_guardados">+ Comentario</button></div>
+        </fieldset>
+        <fieldset>
+          <legend>4.4 Mantenimiento</legend>
+          <div class="q" id="q-tecnico.mantenimiento_post_lanzamiento"><label>El software será mantenido después de su
+              lanzamiento.</label><input type="range" name="tecnico.mantenimiento_post_lanzamiento" min="1" max="5"
+              value="3"><button type="button" class="add-comment" data-target="tecnico.mantenimiento_post_lanzamiento">+
+              Comentario</button></div>
+          <div class="q" id="q-tecnico.actualizaciones_regulares"><label>Se realizarán actualizaciones para mantener el
+              software al día.</label><input type="range" name="tecnico.actualizaciones_regulares" min="1" max="5"
+              value="3"><button type="button" class="add-comment" data-target="tecnico.actualizaciones_regulares">+
+              Comentario</button></div>
+        </fieldset>
+      </div>
+
+      <!-- 5. Contenido     parte 5  -->
+      <div class="card">
+        <div class="section-title"><span class="pill">5</span>
+          <h2 style="margin:0;">Contenido</h2>
+        </div>
+        <fieldset>
+          <legend>5.1 Lenguaje</legend>
+          <div class="q" id="q-contenido.lenguaje_adaptado"><label>El lenguaje está adaptado al público.</label><input
+              type="range" name="contenido.lenguaje_adaptado" min="1" max="5" value="3"><button type="button"
+              class="add-comment" data-target="contenido.lenguaje_adaptado">+ Comentario</button></div>
+          <div class="q" id="q-contenido.terminos_matematicos_correctos"><label>Los términos matemáticos son correctos y
+              también adaptados al público.</label><input type="range" name="contenido.terminos_matematicos_correctos"
+              min="1" max="5" value="3"><button type="button" class="add-comment"
+              data-target="contenido.terminos_matematicos_correctos">+ Comentario</button></div>
+          <div class="q" id="q-contenido.contenido_claro_consistente"><label>El contenido es claro, consistente, conciso
+              y comprensible.</label><input type="range" name="contenido.contenido_claro_consistente" min="1" max="5"
+              value="3"><button type="button" class="add-comment" data-target="contenido.contenido_claro_consistente">+
+              Comentario</button></div>
+        </fieldset>
+        <fieldset>
+          <legend>5.2 Elementos multimedia (imágenes/fotos/dibujos/videos/sonido/...)</legend>
+          <div class="q" id="q-contenido.elementos_apropiados_valor"><label>Esos elementos son apropiados, agregan valor
+              y evitan redundancia con otros contenidos.</label><input type="range"
+              name="contenido.elementos_apropiados_valor" min="1" max="5" value="3"><button type="button"
+              class="add-comment" data-target="contenido.elementos_apropiados_valor">+ Comentario</button></div>
+          <div class="q" id="q-contenido.elementos_multimedia_facilitan_comprension"><label>Los elementos multimedia se
+              utilizan para facilitar la comprensión.</label><input type="range"
+              name="contenido.elementos_multimedia_facilitan_comprension" min="1" max="5" value="3"><button
+              type="button" class="add-comment" data-target="contenido.elementos_multimedia_facilitan_comprension">+
+              Comentario</button></div>
+          <div class="q" id="q-contenido.elementos_fuente_legal"><label>Si provienen de otra fuente, se utilizan
+              legalmente.</label><input type="range" name="contenido.elementos_fuente_legal" min="1" max="5"
+              value="3"><button type="button" class="add-comment" data-target="contenido.elementos_fuente_legal">+
+              Comentario</button></div>
+          <div class="q" id="q-contenido.elementos_buena_calidad"><label>Son de buena calidad (sonido audible, imágenes
+              visibles).</label><input type="range" name="contenido.elementos_buena_calidad" min="1" max="5"
+              value="3"><button type="button" class="add-comment" data-target="contenido.elementos_buena_calidad">+
+              Comentario</button></div>
+          <div class="q" id="q-contenido.explicaciones_multimedia_contiguas"><label>Las explicaciones multimedia
+              presentan los elementos de manera contigua en lugar de separada.</label><input type="range"
+              name="contenido.explicaciones_multimedia_contiguas" min="1" max="5" value="3"><button type="button"
+              class="add-comment" data-target="contenido.explicaciones_multimedia_contiguas">+ Comentario</button></div>
+        </fieldset>
+        <fieldset>
+          <legend>5.3 Organización</legend>
+          <div class="q" id="q-contenido.organizacion_evita_carga"><label>El contenido está organizado para evitar
+              sobrecarga cognitiva.</label><input type="range" name="contenido.organizacion_evita_carga" min="1" max="5"
+              value="3"><button type="button" class="add-comment" data-target="contenido.organizacion_evita_carga">+
+              Comentario</button></div>
+          <div class="q" id="q-contenido.accesibilidad_minima_accion"><label>El contenido es alcanzable en términos de
+              acciones mínimas.</label><input type="range" name="contenido.accesibilidad_minima_accion" min="1" max="5"
+              value="3"><button type="button" class="add-comment" data-target="contenido.accesibilidad_minima_accion">+
+              Comentario</button></div>
+          <div class="q" id="q-contenido.temas_pequenos_accesibles"><label>El contenido se divide en pequeños temas que
+              pueden ser accedidos más fácilmente.</label><input type="range" name="contenido.temas_pequenos_accesibles"
+              min="1" max="5" value="3"><button type="button" class="add-comment"
+              data-target="contenido.temas_pequenos_accesibles">+ Comentario</button></div>
+          <div class="q" id="q-contenido.acceso_multiples_caminos"><label>El contenido se puede alcanzar mediante
+              múltiples caminos.</label><input type="range" name="contenido.acceso_multiples_caminos" min="1" max="5"
+              value="3"><button type="button" class="add-comment" data-target="contenido.acceso_multiples_caminos">+
+              Comentario</button></div>
+          <div class="q" id="q-contenido.enlaces_informacion_adicional"><label>El software tiene enlaces a información
+              adicional externa.</label><input type="range" name="contenido.enlaces_informacion_adicional" min="1"
+              max="5" value="3"><button type="button" class="add-comment"
+              data-target="contenido.enlaces_informacion_adicional">+ Comentario</button></div>
+        </fieldset>
+      </div>
+
+      <!-- 6. Interfaz   pparte 6  -->
+      <div class="card">
+        <div class="section-title"><span class="pill">6</span>
+          <h2 style="margin:0;">Interfaz</h2>
+        </div>
+        <fieldset>
+          <legend>6.1 Navegación</legend>
+          <div class="q" id="q-interfaz.navegacion_facil_intuitiva"><label>La navegación es fácil e
+              intuitiva.</label><input type="range" name="interfaz.navegacion_facil_intuitiva" min="1" max="5"
+              value="3"><button type="button" class="add-comment" data-target="interfaz.navegacion_facil_intuitiva">+
+              Comentario</button></div>
+          <div class="q" id="q-interfaz.navegacion_consistente"><label>Hay consistencia en la navegación a través de las
+              diferentes pantallas.</label><input type="range" name="interfaz.navegacion_consistente" min="1" max="5"
+              value="3"><button type="button" class="add-comment" data-target="interfaz.navegacion_consistente">+
+              Comentario</button></div>
+          <div class="q" id="q-interfaz.navegacion_eficiente"><label>La navegación es eficiente (clics mínimos, flujo
+              lógico).</label><input type="range" name="interfaz.navegacion_eficiente" min="1" max="5" value="3"><button
+              type="button" class="add-comment" data-target="interfaz.navegacion_eficiente">+ Comentario</button></div>
+          <div class="q" id="q-interfaz.regreso_facil"><label>El software permite regresar fácilmente a secciones
+              anteriores.</label><input type="range" name="interfaz.regreso_facil" min="1" max="5" value="3"><button
+              type="button" class="add-comment" data-target="interfaz.regreso_facil">+ Comentario</button></div>
+        </fieldset>
+        <fieldset>
+          <legend>6.2 Diseño y organización</legend>
+          <div class="q" id="q-interfaz.disposicion_grafica_clara"><label>La disposición gráfica es clara y
+              organizada.</label><input type="range" name="interfaz.disposicion_grafica_clara" min="1" max="5"
+              value="3"><button type="button" class="add-comment" data-target="interfaz.disposicion_grafica_clara">+
+              Comentario</button></div>
+          <div class="q" id="q-interfaz.legibilidad_tipos_colores"><label>Las fuentes y colores mejoran la
+              legibilidad.</label><input type="range" name="interfaz.legibilidad_tipos_colores" min="1" max="5"
+              value="3"><button type="button" class="add-comment" data-target="interfaz.legibilidad_tipos_colores">+
+              Comentario</button></div>
+          <div class="q" id="q-interfaz.iconos_significativos"><label>Los íconos y símbolos son consistentes y
+              significativos.</label><input type="range" name="interfaz.iconos_significativos" min="1" max="5"
+              value="3"><button type="button" class="add-comment" data-target="interfaz.iconos_significativos">+
+              Comentario</button></div>
+          <div class="q" id="q-interfaz.diseno_visual_minimalista"><label>El diseño visual evita decoraciones
+              innecesarias.</label><input type="range" name="interfaz.diseno_visual_minimalista" min="1" max="5"
+              value="3"><button type="button" class="add-comment" data-target="interfaz.diseno_visual_minimalista">+
+              Comentario</button></div>
+          <div class="q" id="q-interfaz.diseno_responsivo"><label>La interfaz se adapta a diferentes tamaños de pantalla
+              (diseño responsivo).</label><input type="range" name="interfaz.diseno_responsivo" min="1" max="5"
+              value="3"><button type="button" class="add-comment" data-target="interfaz.diseno_responsivo">+
+              Comentario</button></div>
+        </fieldset>
+      </div>
+
+      <!-- Resumen de comentarios  parte 1 -->
+      <div class="card">
+        <div class="section-title"><span class="pill">Resumen</span>
+          <h2 style="margin:0;">Comentarios recopilados</h2>
+        </div>
+        <div id="resumen-meta" class="summary-meta"></div>
+        <div id="resumen-comentarios">
+          <p>No se han agregado comentarios aún.</p>
+        </div>
+      </div>
+
+      <div class="actions wrap">
+        <button type="button" class="ghost" id="btn-reset">Limpiar</button>
+        <button type="button" class="ghost" id="btn-pdf">Exportar PDF</button>
+        <button type="button" class="primary" id="btn-export">Guardar respuestas (JSON)</button>
+      </div>
+    </form>
+  </main>
+
+  <script>
+    // Diccionario de nombres legibles para los comentarios corregidos otg rv2
+    const labelMap = {
+      "general.innovacion": "General — Innovación y valor agregado",
+      "general.facilidad_uso": "General — Facilidad de uso",
+      "general.perspectiva_interdisciplinaria": "General — Perspectiva interdisciplinaria",
+      "general.niveles_complejidad": "General — Niveles de complejidad",
+      "general.enfoque_curricular": "General — Enfoque de aprendizaje ajustado al currículo",
+
+      "pedagogia.objetivos_claros": "Pedagógico — Objetivos educativos claros",
+      "pedagogia.contexto_individual_colaboracion": "Pedagógico — Construcción individual con colaboración",
+      "pedagogia.promueve_creatividad": "Pedagógico — Promueve creatividad",
+      "pedagogia.exploracion_independiente": "Pedagógico — Exploración independiente",
+      "pedagogia.autorreflexion_autocontrol": "Pedagógico — Autoanálisis, autorregulación y autoconciencia",
+
+      "pedagogia.actividades_aspectos_necesarios": "Pedagógico — Actividades enfocadas en aspectos necesarios",
+      "pedagogia.tareas_relevantes_autenticas": "Pedagógico — Tareas relevantes y auténticas",
+      "pedagogia.dificultad_andamiaje_apropiado": "Pedagógico — Dificultad apropiada y andamiaje",
+      "pedagogia.variabilidad_tareas": "Pedagógico — Variabilidad en las tareas",
+      "pedagogia.resultados_disponibles": "Pedagógico — Resultados disponibles",
+      "pedagogia.actividades_creacion_personalizacion": "Pedagógico — Creación y personalización de actividades",
+      "pedagogia.tareas_resolucion_problemas": "Pedagógico — Tareas de resolución de problemas y pensamiento de orden superior",
+
+      "pedagogia.uso_sin_instructor": "Pedagógico — Uso sin intervención del instructor",
+      "pedagogia.rol_docente_guia": "Pedagógico — Rol del docente como guía",
+
+      "pedagogia.evaluacion_apoyo_docente": "Pedagógico — Reconoce y apoya el rol del docente",
+      "pedagogia.evaluacion_presente": "Pedagógico — Presencia de evaluación",
+      "pedagogia.evaluacion_autentica_integrada": "Pedagógico — Evaluación auténtica e integrada",
+
+      "usabilidad.guia_anima_usuario": "Usabilidad — Guía y ánimo al usuario",
+      "usabilidad.recursos_ayuda": "Usabilidad — Recursos de ayuda disponibles",
+      "usabilidad.instrucciones_claras": "Usabilidad — Instrucciones claras y accesibles",
+
+      "usabilidad.retroalimentacion_efectiva": "Usabilidad — Retroalimentación efectiva",
+      "usabilidad.motivacion_intrinseca": "Usabilidad — Motivación intrínseca",
+      "usabilidad.fomenta_acciones_positivas": "Usabilidad — Fomenta acciones positivas",
+      "usabilidad.retroalimentacion_positiva_en_fallos": "Usabilidad — Retroalimentación positiva ante fallos",
+      "usabilidad.retroalimentacion_reflexion_errores": "Usabilidad — Retroalimentación para reflexionar sobre errores",
+      "usabilidad.retroalimentacion_progreso": "Usabilidad — Retroalimentación del progreso del estudiante",
+
+      "usabilidad.interaccion_sistema": "Usabilidad — Interacción con el sistema",
+      "usabilidad.seccion_discusion_colaboracion": "Usabilidad — Sección de discusión y colaboración",
+
+      "usabilidad.reconoce_recupera_errores": "Usabilidad — Reconoce y recupera errores",
+      "usabilidad.prevencion_errores": "Usabilidad — Prevención de errores",
+      "usabilidad.mensajes_error_claros": "Usabilidad — Mensajes de error claros",
+      "usabilidad.aprendizaje_errores": "Usabilidad — Aprendizaje a partir de errores",
+
+      "usabilidad.control_usuario": "Usabilidad — Control del usuario sobre el sistema",
+      "usabilidad.personalizacion_configuracion": "Usabilidad — Personalización de configuración o información",
+
+      "tecnico.compatibilidad_hardware": "Técnico — Compatibilidad con el hardware del usuario",
+      "tecnico.condiciones_compatibilidad": "Técnico — Condiciones de compatibilidad explicadas",
+      "tecnico.instalacion_facil": "Técnico — Instalación fácil",
+      "tecnico.modalidad_uso": "Técnico — Modalidad de uso explicada",
+      "tecnico.manipulacion_datos_masiva": "Técnico — Manipulación de datos en gran cantidad",
+      "tecnico.datos_analizables": "Técnico — Datos generados analizables",
+      "tecnico.transparencia_informacion": "Técnico — Transparencia de la información",
+      "tecnico.datos_guardados": "Técnico — Almacenamiento de datos del usuario",
+      "tecnico.mantenimiento_post_lanzamiento": "Técnico — Mantenimiento posterior al lanzamiento",
+      "tecnico.actualizaciones_regulares": "Técnico — Actualizaciones regulares",
+
+      "contenido.lenguaje_adaptado": "Contenido — Lenguaje adaptado al público",
+      "contenido.terminos_matematicos_correctos": "Contenido — Términos matemáticos correctos y adaptados",
+      "contenido.contenido_claro_consistente": "Contenido — Claridad y consistencia del contenido",
+      "contenido.elementos_apropiados_valor": "Contenido — Elementos apropiados que añaden valor",
+      "contenido.elementos_multimedia_facilitan_comprension": "Contenido — Elementos multimedia facilitan la comprensión",
+      "contenido.elementos_fuente_legal": "Contenido — Uso legal de elementos de otras fuentes",
+      "contenido.elementos_buena_calidad": "Contenido — Elementos de buena calidad",
+      "contenido.explicaciones_multimedia_contiguas": "Contenido — Explicaciones multimedia contiguas",
+      "contenido.organizacion_evita_carga": "Contenido — Organización que evita la sobrecarga cognitiva",
+      "contenido.accesibilidad_minima_accion": "Contenido — Accesible con acciones mínimas",
+      "contenido.temas_pequenos_accesibles": "Contenido — Temas pequeños accesibles",
+      "contenido.acceso_multiples_caminos": "Contenido — Acceso mediante múltiples caminos",
+      "contenido.enlaces_informacion_adicional": "Contenido — Enlaces a información adicional externa",
+
+      "interfaz.navegacion_facil_intuitiva": "Interfaz — Navegación fácil e intuitiva",
+      "interfaz.navegacion_consistente": "Interfaz — Navegación consistente",
+      "interfaz.navegacion_eficiente": "Interfaz — Navegación eficiente",
+      "interfaz.regreso_facil": "Interfaz — Regresar fácilmente a secciones anteriores",
+      "interfaz.disposicion_grafica_clara": "Interfaz — Disposición gráfica clara y organizada",
+      "interfaz.legibilidad_tipos_colores": "Interfaz — Tipografía y colores legibles",
+      "interfaz.iconos_significativos": "Interfaz — Íconos y símbolos significativos",
+      "interfaz.diseno_visual_minimalista": "Interfaz — Diseño visual minimalista",
+      "interfaz.diseno_responsivo": "Interfaz — Diseño responsivo"
+    };
+
+
+    // --- Resu ---
+    let reportDate = new Date();
+
+    function escapeHtml(str) {
+      return String(str ?? "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+
+    function formatDate(d) {
+      try {
+        return d.toLocaleString("es-MX", { dateStyle: "medium", timeStyle: "short" });
+      } catch (_) {
+        return d.toLocaleString();
+      }
+    }
+
+    function getMetaValue(name) {
+      const el = document.querySelector(`input[name="${name}"]`);
+      return el ? el.value.trim() : "";
+    }
+
+    function updateMetaSummary() {
+      const box = document.getElementById("resumen-meta");
+      if (!box) return;
+
+      const nombre = getMetaValue("meta.nombre");
+      const version = getMetaValue("meta.version");
+      const evaluador = getMetaValue("meta.evaluador");
+
+      const chip = (k, v) => {
+        const muted = v ? "" : " muted";
+        const safe = v ? escapeHtml(v) : "—";
+        return `<div class="chip"><span class="k">${k}</span><span class="v${muted}">${safe}</span></div>`;
+      };
+
+      box.innerHTML = `
+    <div class="row">
+      ${chip("Software", nombre)}
+      ${chip("Versión", version)}
+      ${chip("Evaluador(a)", evaluador)}
+      ${chip("Fecha", formatDate(reportDate))}
+    </div>
+  `;
+    }
+
+
+    // --- ResumeNREAL ---
+    function getQuestionScore(key) {
+      const q = document.getElementById("q-" + key);
+      if (!q) return null;
+      const hidden = q.querySelector(`input[type="hidden"][name="${key}.na"]`);
+      if (hidden && hidden.value === "1") return "N/A";
+      const range = q.querySelector('input[type="range"]');
+      if (!range) return null;
+      return range.value;
+    }
+
+    function updateSummaryItem(key) {
+      const summary = document.getElementById("resumen-comentarios");
+      if (!summary) return;
+
+      const q = document.getElementById("q-" + key);
+      if (!q) return;
+
+      const textarea = q.querySelector("textarea");
+      // --
+      if (!textarea) return;
+
+      if (summary.querySelector("p") && summary.textContent.includes("No se han agregado")) {
+        summary.innerHTML = "";
+      }
+
+      let item = summary.querySelector(`[data-summary='${key}']`);
+      if (!item) {
+        item = document.createElement("p");
+        item.setAttribute("data-summary", key);
+        summary.appendChild(item);
+      }
+
+      const niceName = labelMap[key] || key;
+      const score = getQuestionScore(key);
+      const scorePart = score ? ` (Puntaje: ${score})` : "";
+      item.textContent = `${niceName}${scorePart}: ${textarea.value || "(sin comentario)"}`;
+    }
+
+    // --- ui ---
+    function setNoAplica(key, on) {
+      const q = document.getElementById("q-" + key);
+      if (!q) return;
+
+      const range = q.querySelector('input[type="range"]');
+      const out = q.querySelector(".score");
+      const hidden = q.querySelector(`input[type="hidden"][name="${key}.na"]`);
+      const btn = q.querySelector(`button.na-toggle[data-target="${key}"]`);
+
+      if (hidden) hidden.value = on ? "1" : "0";
+      q.classList.toggle("na", on);
+
+      if (range) range.disabled = !!on;
+      if (out && range) out.textContent = on ? "N/A" : range.value;
+
+      if (btn) {
+        btn.classList.toggle("active", on);
+        btn.textContent = on ? "Sí aplica" : "No aplica";
+      }
+
+      // Act--
+      updateSummaryItem(key);
+    }
+
+    (function enhanceQuestions() {
+      const form = document.getElementById("form-petese");
+      if (!form) return;
+
+      //
+      if (!document.getElementById("scale-1-5")) {
+        const dl = document.createElement("datalist");
+        dl.id = "scale-1-5";
+        ["1", "2", "3", "4", "5"].forEach(v => {
+          const opt = document.createElement("option");
+          opt.value = v;
+          opt.label = v;
+          dl.appendChild(opt);
+        });
+        form.appendChild(dl);
+      }
+
+      document.querySelectorAll(".q").forEach(q => {
+        const range = q.querySelector('input[type="range"]');
+        if (!range) return;
+
+        // -----------------
+        range.min = "1";
+        range.max = "5";
+        range.step = "1";
+        range.setAttribute("list", "scale-1-5");
+
+        // VIS--------
+        if (!range.parentElement.classList.contains("rating")) {
+          const rating = document.createElement("div");
+          rating.className = "rating";
+
+          const tMin = document.createElement("span");
+          tMin.className = "tick";
+          tMin.textContent = range.min;
+
+          const tMax = document.createElement("span");
+          tMax.className = "tick";
+          tMax.textContent = range.max;
+
+          const out = document.createElement("output");
+          out.className = "score";
+          out.textContent = range.value;
+          out.setAttribute("aria-label", "Puntuación");
+
+          rating.appendChild(tMin);
+          range.parentNode.insertBefore(rating, range);
+          rating.appendChild(range);
+          rating.appendChild(tMax);
+          rating.appendChild(out);
+
+          range.addEventListener("input", () => {
+            if (!range.disabled) out.textContent = range.value;
+            updateSummaryItem(range.name);
+          });
+        }
+
+        const key = range.name;
+
+        // 
+        if (!q.querySelector(`input[type="hidden"][name="${key}.na"]`)) {
+          const h = document.createElement("input");
+          h.type = "hidden";
+          h.name = key + ".na";
+          h.value = "0";
+          q.appendChild(h);
+        }
+
+        // NA-------
+        const addBtn = q.querySelector("button.add-comment");
+        if (addBtn && !q.querySelector(`button.na-toggle[data-target="${key}"]`)) {
+          const naBtn = document.createElement("button");
+          naBtn.type = "button";
+          naBtn.className = "na-toggle";
+          naBtn.dataset.target = key;
+          naBtn.textContent = "No aplica";
+          q.insertBefore(naBtn, addBtn);
+        }
+
+        // ----STT
+        const hidden = q.querySelector(`input[type="hidden"][name="${key}.na"]`);
+        if (hidden && hidden.value === "1") setNoAplica(key, true);
+      });
+    })();
+
+    // PF-------------
+    updateMetaSummary();
+    document.querySelectorAll('input[name^="meta."]').forEach(inp => {
+      inp.addEventListener("input", updateMetaSummary);
+    });
+
+
+
+    function serializeForm(form) {
+      const data = {};
+      const formData = new FormData(form);
+
+      const toValue = (v) => {
+        const n = Number(v);
+        return Number.isFinite(n) && v !== "" ? n : v;
+      };
+
+      const setDeep = (obj, parts, value) => {
+        let ptr = obj;
+        for (let i = 0; i < parts.length - 1; i++) {
+          const p = parts[i];
+          if (!ptr[p] || typeof ptr[p] !== "object" || Array.isArray(ptr[p])) ptr[p] = {};
+          ptr = ptr[p];
+        }
+        ptr[parts[parts.length - 1]] = value;
+      };
+
+      for (const [key, val] of formData.entries()) {
+        let parts = key.split(".");
+
+
+        if (parts[0] !== "meta" && parts.length === 2) {
+          parts = [parts[0], parts[1], "valor"];
+        }
+
+        setDeep(data, parts, toValue(val));
+      }
+
+      // NA---
+      const ensureNA = (obj) => {
+        if (!obj || typeof obj !== "object") return;
+        for (const v of Object.values(obj)) {
+          if (v && typeof v === "object" && !Array.isArray(v)) {
+            if ("na" in v && v.na === 1 && !("valor" in v)) v.valor = null;
+            ensureNA(v);
+          }
+        }
+      };
+      ensureNA(data);
+
+      return data;
+    }
+
+    document.getElementById("btn-export").addEventListener("click", () => {
+      const form = document.getElementById("form-petese");
+      const payload = serializeForm(form);
+      const blob = new Blob([JSON.stringify(payload, null, 2)], { type: "application/json" });
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      const name = (payload.meta && payload.meta.nombre ? payload.meta.nombre : "evaluacion") + "_PETESE.json";
+      a.download = name;
+      a.click();
+      URL.revokeObjectURL(a.href);
+    });
+
+    // --- EXPORTAR  PDF               rev3---
+    const sectionTitles = {
+      general: "Aspectos generales",
+      pedagogia: "Aspectos pedagógicos",
+      usabilidad: "Usabilidad",
+      tecnico: "Aspectos técnicos",
+      contenido: "Contenido",
+      interfaz: "Interfaz"
+    };
+
+    function collectReportData() {
+      const meta = {
+        nombre: getMetaValue("meta.nombre"),
+        version: getMetaValue("meta.version"),
+        evaluador: getMetaValue("meta.evaluador"),
+        fecha: formatDate(new Date())
+      };
+
+      const groups = {};
+      const seen = new Set();
+
+      const addKey = (key) => {
+        const q = document.getElementById("q-" + key);
+        if (!q) return;
+        const range = q.querySelector('input[type="range"]');
+        if (!range) return;
+
+        const section = key.split(".")[0] || "otros";
+        if (!groups[section]) groups[section] = [];
+
+        const niceName = labelMap[key] || q.querySelector("label")?.textContent?.trim() || key;
+        const score = getQuestionScore(key) ?? "";
+        const comment = q.querySelector("textarea")?.value?.trim() || "";
+
+        groups[section].push({ key, label: niceName, score, comment });
+        seen.add(key);
+      };
+
+      // OR--------
+      Object.keys(labelMap).forEach(addKey);
+
+
+      document.querySelectorAll('.q input[type="range"]').forEach(r => {
+        if (!seen.has(r.name)) addKey(r.name);
+      });
+
+
+      let total = 0, naCount = 0, sum = 0, count = 0;
+      Object.values(groups).forEach(rows => {
+        rows.forEach(r => {
+          total++;
+          if (r.score === "N/A") naCount++;
+          else {
+            const n = Number(r.score);
+            if (Number.isFinite(n)) { sum += n; count++; }
+          }
+        });
+      });
+      const avg = count ? (sum / count) : 0;
+
+      return { meta, groups, stats: { total, naCount, count, avg } };
+    }
+
+    function buildReportHTML(data) {
+      const accent = getComputedStyle(document.documentElement).getPropertyValue("--accent").trim() || "#1d4ed8";
+      const accent2 = getComputedStyle(document.documentElement).getPropertyValue("--accent-2").trim() || "#0b5cff";
+
+      const { meta, groups, stats } = data;
+
+      const chip = (k, v) => {
+        const safe = v ? escapeHtml(v) : "—";
+        const muted = v ? "" : " muted";
+        return `<div class="chip"><span class="k">${escapeHtml(k)}</span><span class="v${muted}">${safe}</span></div>`;
+      };
+
+      const statCard = `
+        <div class="stats">
+          <div class="stat"><div class="k">Preguntas</div><div class="v">${stats.total}</div></div>
+          <div class="stat"><div class="k">No aplica</div><div class="v">${stats.naCount}</div></div>
+          <div class="stat"><div class="k">Promedio (sin N/A)</div><div class="v">${stats.count ? stats.avg.toFixed(2) : "—"}</div></div>
+        </div>
+      `;
+
+      const order = ["general", "pedagogia", "usabilidad", "tecnico", "contenido", "interfaz"];
+      const sectionHtml = order
+        .filter(k => groups[k] && groups[k].length)
+        .map(sectionKey => {
+          const title = sectionTitles[sectionKey] || sectionKey;
+          const rows = groups[sectionKey].map(r => `
+            <tr>
+              <td class="label">${escapeHtml(r.label)}</td>
+              <td class="score">${escapeHtml(r.score || "—")}</td>
+              <td class="comment">${escapeHtml(r.comment || "—")}</td>
+            </tr>
+          `).join("");
+
+          return `
+            <h2>${escapeHtml(title)}</h2>
+            <table>
+              <thead>
+                <tr>
+                  <th>Indicador</th>
+                  <th style="width:90px;">Puntaje</th>
+                  <th>Comentario</th>
+                </tr>
+              </thead>
+              <tbody>${rows}</tbody>
+            </table>
+          `;
+        }).join("");
+
+      return `<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Reporte PETESE</title>
+  <style>
+    :root{ --a:${accent}; --a2:${accent2}; }
+    *{ box-sizing:border-box; }
+    body{
+      margin:0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial;
+      color:#0f172a;
+      background:#ffffff;
+    }
+    .top{
+      padding: 22px 26px 18px;
+      border-bottom: 1px solid #e5e7eb;
+      background:
+        radial-gradient(1200px 260px at 0% 0%, rgba(29, 78, 216, .12) 0%, transparent 60%),
+        radial-gradient(900px 220px at 100% 0%, rgba(11, 92, 255, .10) 0%, transparent 60%),
+        linear-gradient(90deg, rgba(11,92,255,.08), rgba(29,78,216,.06));
+    }
+    .brand{
+      display:inline-block;
+      padding: 4px 10px;
+      border-radius: 10px;
+      color:white;
+      font-weight: 900;
+      letter-spacing: .02em;
+      background: linear-gradient(90deg, var(--a2), var(--a));
+      margin-right: 8px;
+    }
+    h1{ margin: 0 0 6px; font-size: 20px; }
+    .sub{ color:#334155; margin:0; font-size: 12px; }
+    .wrap{ max-width: 980px; margin: 0 auto; padding: 18px 26px 34px; }
+    .meta{
+      display:flex; flex-wrap:wrap; gap:10px;
+      margin: 14px 0 10px;
+    }
+    .chip{
+      display:flex; gap:8px; align-items:center;
+      padding: 8px 10px;
+      border-radius: 999px;
+      border: 1px solid #e5e7eb;
+      background: #f8fafc;
+      font-size: 12px;
+    }
+    .chip .k{ color:#64748b; }
+    .chip .v{ font-weight: 800; color:#0f172a; }
+    .chip .v.muted{ color:#94a3b8; font-weight: 700; }
+    .stats{
+      display:grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+      margin: 6px 0 18px;
+    }
+    .stat{
+      border: 1px solid #e5e7eb;
+      background: #ffffff;
+      border-radius: 14px;
+      padding: 10px 12px;
+    }
+    .stat .k{ font-size: 12px; color:#64748b; }
+    .stat .v{ font-size: 18px; font-weight: 900; margin-top: 2px; }
+    h2{
+      margin: 18px 0 8px;
+      font-size: 14px;
+      color:#0f172a;
+    }
+    table{
+      width:100%;
+      border-collapse: collapse;
+      border: 1px solid #e5e7eb;
+      border-radius: 12px;
+      overflow: hidden;
+      margin-bottom: 14px;
+    }
+    th, td{
+      padding: 10px 10px;
+      border-bottom: 1px solid #e5e7eb;
+      vertical-align: top;
+      font-size: 12px;
+    }
+    th{
+      text-align:left;
+      background: #f1f5f9;
+      color:#0f172a;
+      font-weight: 800;
+    }
+    tr:last-child td{ border-bottom: 0; }
+    td.score{
+      text-align:center;
+      font-weight: 900;
+      color: #0f172a;
+    }
+    td.comment{ color:#0f172a; }
+    .footer{
+      margin-top: 12px;
+      color:#64748b;
+      font-size: 11px;
+    }
+    @media print{
+      .footer{ display:none; }
+      body{ background:white; }
+      .wrap{ padding-bottom: 0; }
+    }
+  </style>
+</head>
+<body>
+  <div class="top">
+    <div class="wrap" style="padding:0; max-width:980px;">
+      <h1><span class="brand">PETESE</span>Reporte de evaluación</h1>
+      <p class="sub">Generado desde el formulario PETESE (usa “Guardar como PDF” en el diálogo de impresión).</p>
+    </div>
+  </div>
+
+  <div class="wrap">
+    <div class="meta">
+      ${chip("Software", meta.nombre)}
+      ${chip("Versión", meta.version)}
+      ${chip("Evaluador(a)", meta.evaluador)}
+      ${chip("Fecha de exportación", meta.fecha)}
+    </div>
+
+    ${statCard}
+
+    ${sectionHtml}
+
+    <div class="footer">Tip: si algo se corta en páginas, abre “Más opciones” y activa “Gráficos de fondo” para que se mantenga el encabezado con estilo.</div>
+  </div>
+</body>
+</html>`;
+    }
+
+    function exportPDF() {
+      const data = collectReportData();
+      const html = buildReportHTML(data);
+      const w = window.open("", "_blank");
+      if (!w) {
+        alert("Tu navegador bloqueó la ventana emergente. Permite ventanas emergentes para exportar el PDF.");
+        return;
+      }
+      w.document.open();
+      w.document.write(html);
+      w.document.close();
+      w.focus();
+      setTimeout(() => w.print(), 350);
+    }
+
+    const btnPdf = document.getElementById("btn-pdf");
+    if (btnPdf) btnPdf.addEventListener("click", exportPDF);
+
+
+    document.getElementById("btn-reset").addEventListener("click", () => {
+      if (confirm("¿Limpiar todas las respuestas?")) {
+        const form = document.getElementById("form-petese");
+        form.reset();
+
+        reportDate = new Date();
+        updateMetaSummary();
+
+
+        form.querySelectorAll(".q textarea").forEach(t => t.remove());
+
+        document.querySelectorAll(".q").forEach(q => {
+          const range = q.querySelector('input[type="range"]');
+          if (!range) return;
+          const key = range.name;
+          setNoAplica(key, false);
+          const out = q.querySelector(".score");
+          if (out) out.textContent = range.value;
+        });
+
+        document.getElementById("resumen-comentarios").innerHTML = "<p>No se han agregado comentarios aún.</p>";
+      }
+    });
+
+    document.addEventListener("click", e => {
+
+      if (e.target.classList.contains("na-toggle")) {
+        const key = e.target.dataset.target;
+        const q = document.getElementById("q-" + key);
+        const hidden = q ? q.querySelector(`input[type="hidden"][name="${key}.na"]`) : null;
+        const currentlyNA = hidden && hidden.value === "1";
+        setNoAplica(key, !currentlyNA);
+        return;
+      }
+
+
+      if (e.target.classList.contains("add-comment")) {
+        const target = e.target.dataset.target;
+        const parent = document.getElementById("q-" + target);
+        if (!parent.querySelector("textarea")) {
+          const textarea = document.createElement("textarea");
+          textarea.name = target + ".comentario";
+          textarea.placeholder = "Escribe un comentario para esta pregunta...";
+          parent.appendChild(textarea);
+          updateSummaryItem(target);
+          textarea.addEventListener("input", () => {
+            updateSummaryItem(target);
+          });
+        }
+      }
+    });
+  </script>
+</body>
+
+</html>
